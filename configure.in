@@ -1,0 +1,41 @@
+AC_INIT(configure.in)
+
+AM_CONFIG_HEADER(config.h)
+AM_INIT_AUTOMAKE(librtf, 0.0.3)
+
+
+LIBRTF_MAJOR_VERSION=0
+LIBRTF_MINOR_VERSION=0
+LIBRTF_MICRO_VERSION=1
+LIBRTF_VERSION=$LIBRTF_MAJOR_VERSION.$LIBRTF_MINOR_VERSION.$LIBRTF_MICRO_VERSION
+
+dnl This will be used with the 'make release' target
+
+LIBRTF_RELEASE_DATE=`date +"%Y%m%d"`
+
+# This is a special hack for OpenBSD and MirOS systems. The dynamic linker
+# in OpenBSD uses some special semantics for shared libraries. Their soname
+# contains only two numbers, major and minor.
+# See http://bugzilla.remotesensing.org/show_bug.cgi?id=838 for details.
+case "$target_os" in
+    openbsd* | mirbsd*)
+        LIBRTF_VERSION_INFO=$LIBRTF_MAJOR_VERSION$LIBRTF_MINOR_VERSION:$LIBRTF_MICRO_VERSION:0
+        ;;
+    *)
+        LIBRTF_VERSION_INFO=$LIBRTF_MAJOR_VERSION:$LIBRTF_MINOR_VERSION:$LIBRTF_MICRO_VERSION
+        ;;
+esac
+
+AC_SUBST(LIBRTF_MAJOR_VERSION)
+AC_SUBST(LIBRTF_MINOR_VERSION)
+AC_SUBST(LIBRTF_MICRO_VERSION)
+AC_SUBST(LIBRTF_VERSION)
+AC_SUBST(LIBRTF_VERSION_INFO)
+AC_SUBST(LIBRTF_RELEASE_DATE)
+
+AC_LANG_C
+AC_PROG_CC
+AM_PROG_LIBTOOL
+
+AC_OUTPUT(Makefile src/Makefile src/c/Makefile src/cpp/Makefile src/cpp.net/Makefile src/mono/Makefile tests/Makefile tests/01_html_converter/Makefile)
+
